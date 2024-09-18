@@ -50,49 +50,68 @@ void TerminateProcessByName(const char* processName) {
 	std::cout << "Terminated process ID: " << processID << std::endl;
     CloseHandle(hProcess);
 }
-//void RunProcess(const char* processPath) {
-//    STARTUPINFO si;
-//    PROCESS_INFORMATION pi;
-//
-//    // Initialize memory for startup info and process info structures
-//    ZeroMemory(&si, sizeof(si));
-//    si.cb = sizeof(si); // Required for STARTUPINFO structure
-//    ZeroMemory(&pi, sizeof(pi));
-//
-//    // Start the process
-//    if (!CreateProcess(
-//            processPath,   // Path to the executable file
-//            NULL,          // Command line arguments (NULL if none)
-//            NULL,          // Process handle not inheritable
-//            NULL,          // Thread handle not inheritable
-//            FALSE,         // Handle inheritance option
-//            0,             // No creation flags
-//            NULL,          // Use parent's environment block
-//            NULL,          // Use parent's starting directory
-//            &si,           // Pointer to STARTUPINFO structure
-//            &pi))          // Pointer to PROCESS_INFORMATION structure
-//    {
-//        std::cerr << "CreateProcess failed. Error: " << GetLastError() << "\n";
-//        return;
-//    }
-//
-//    std::cout << "Process started successfully!\n";
-//
-//    // Wait until child process exits (optional)
-//    WaitForSingleObject(pi.hProcess, INFINITE);
-//
-//    // Close process and thread handles
-//    CloseHandle(pi.hProcess);
-//    CloseHandle(pi.hThread);
-//}
-int main() {
-	
-    const char* processName = "settinggame.exe";
+void RunProcess(const char* processPath) {
+   STARTUPINFO si;
+   PROCESS_INFORMATION pi;
 
-    while (IsProcessRunning(processName)) {
-        std::cout << "Process is still running... attempting to terminate\n";
-        TerminateProcessByName(processName);
-    }
+   // Initialize memory for startup info and process info structures
+   ZeroMemory(&si, sizeof(si));
+   si.cb = sizeof(si); // Required for STARTUPINFO structure
+   ZeroMemory(&pi, sizeof(pi));
+
+   // Start the process
+   if (!CreateProcess(
+           processPath,   // Path to the executable file
+           NULL,          // Command line arguments (NULL if none)
+           NULL,          // Process handle not inheritable
+           NULL,          // Thread handle not inheritable
+           FALSE,         // Handle inheritance option
+           0,             // No creation flags
+           NULL,          // Use parent's environment block
+           NULL,          // Use parent's starting directory
+           &si,           // Pointer to STARTUPINFO structure
+           &pi))          // Pointer to PROCESS_INFORMATION structure
+   {
+       std::cerr << "CreateProcess failed. Error: " << GetLastError() << "\n";
+       return;
+   }
+
+   std::cout << "Process started successfully!\n";
+
+   // Wait until child process exits (optional)
+   WaitForSingleObject(pi.hProcess, INFINITE);
+
+   // Close process and thread handles
+   CloseHandle(pi.hProcess);
+   CloseHandle(pi.hThread);
+}
+int main() {
+start:  std::cout<<"Enter 1 to kill a process or Enter 2 to run a process:";
+    	int x; 
+    	std::cin>>x; 
+    	if (x==1) {
+    		std::cout<<"Enter the name of process that you want to terminate it: ";
+    		std::string s;
+    		std::cin>>s; 
+    		std::cin>>s;
+    		const char* processName = s.c_str();
+    		while (IsProcessRunning(processName)) {
+        		std::cout << "Process is still running... attempting to terminate\n";
+        		TerminateProcessByName(processName);
+    		}
+	}
+    	else if (x==2){
+		std::cout<<"Enter the name of process that you want to run it: ";
+		std::string s; 
+		std::cin>>s;
+		const char* processName =s.c_str();
+		RunProcess(processName);
+	}
+   	else{
+		std::cout<<"Input is invalid please enter correct it"<<std::endl;
+		goto start;
+	}
+
 	
     
     return 0;
